@@ -1,0 +1,6 @@
+[submodule "WPFGauges"]
+	path = WPFGauges
+	url = git@github.com:Narwhalsss360/WPFGauges
+[submodule "truckconnect"]
+	path = truckconnect
+	url = git@github.com:Narwhalsss360/truckconnect
