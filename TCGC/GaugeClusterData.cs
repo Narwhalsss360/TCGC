@@ -27,6 +27,7 @@ namespace TCGC
         [DataDefinitionMember(TelemetryID.TruckChannelOilPressure)]
         public ValueStorage<float> OilPressure { get; set; } = new();
 
+        [DataDefinitionMember(TelemetryID.ConfigurationTruckInfo)]
         public MasterStorage.ConfigurationStorage.ConfigurationTruckStorage TruckConfiguration = new();
     }
 }

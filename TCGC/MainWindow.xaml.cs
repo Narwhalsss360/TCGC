@@ -27,8 +27,26 @@ public partial class MainWindow : Window
         _oilPressureGauge.Animator = _fuelGauge.Animator;
 
 
-        _refreshTimer.Elapsed += (sender, e) => { RefreshThread().Wait(); _refreshTimer.Start(); };
+        _refreshTimer.Elapsed += (sender, e) =>
+        {
+            try
+            {
+                RefreshThread().Wait();
+            }
+            catch (AggregateException agg)
+            {
+                if (agg.InnerException is TaskCanceledException canceledException)
+                    throw canceledException;
+            }
+            catch (TaskCanceledException)
+            {
+                Dispatcher.Invoke(() => Close());
+                return;
+            }
+            _refreshTimer.Start();
+        };
         Closed += (sender, e) =>
+
         {
             _cts.Cancel();
             _refreshTimer.Stop();
@@ -47,7 +65,7 @@ public partial class MainWindow : Window
 
     async Task RefreshThread()
     {
-        _data.TruckConfiguration = await _connection.RequestAsync<MasterStorage.ConfigurationStorage.ConfigurationTruckStorage>(TelemetryID.ConfigurationTruckInfo, null, _cts.Token);
+        // _data.TruckConfiguration = await _connection.RequestAsync<MasterStorage.ConfigurationStorage.ConfigurationTruckStorage>(TelemetryID.ConfigurationTruckInfo, null, _cts.Token);
         await Task.Run(async () => await _connection.RequestAsync(_data), _cts.Token);
         await Dispatcher.InvokeAsync(() => Apply(_data));
         _lastRefresh = DateTime.Now;
