@@ -4,9 +4,91 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TCGC"
+        xmlns:analog="clr-namespace:WPFGauges.Analog;assembly=WPFGauges"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="300" Width="800">
+    <Window.Resources>
+        <Style TargetType="{x:Type analog:AnalogGauge}">
+            <Setter Property="LabelStyle">
+                <Setter.Value>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="FontSize" Value="6" />
+                    </Style>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width=".20*" />
+            <ColumnDefinition Width=".30*" />
+            <ColumnDefinition Width=".30*" />
+            <ColumnDefinition Width=".20*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
 
+        <analog:AnalogGauge
+            x:Name="_fuelGauge"
+            Minimum="0"
+            Maximum="100"
+            Value="0"
+            Pitch="10"
+            LabelInterval="2" />
+
+        <analog:AnalogGauge
+            x:Name="_oilTemperatureGauge"
+            Grid.Row="1"
+            Minimum="100"
+            Maximum="240"
+            Value="0"
+            Pitch="5"
+            LabelInterval="4" />
+
+        <Grid Grid.RowSpan="2" Grid.Column="1">
+            <analog:AnalogGauge
+                x:Name="_rpmGauge"
+                Minimum="0"
+                Maximum="2500"
+                Value="0"
+                Pitch="100"
+                LabelInterval="5" />
+
+            <TextBlock
+                x:Name="_odometerTextBlock"
+                VerticalAlignment="Bottom"
+                Margin="0, 0, 0, 100"
+                HorizontalAlignment="Center" />
+        </Grid>
+
+        <Grid Grid.RowSpan="2" Grid.Column="2">
+            <analog:AnalogGauge
+                x:Name="_speedGauge"
+                Minimum="0"
+                Maximum="160"
+                Value="0"
+                Pitch="10"
+                LabelInterval="2" />
+        </Grid>
+
+        <analog:AnalogGauge
+            x:Name="_voltageGauge"
+            Grid.Column="3"
+            Minimum="0"
+            Maximum="28"
+            Value="0"
+            Pitch="1"
+            LabelInterval="6" />
+
+        <analog:AnalogGauge
+            x:Name="_oilPressureGauge"
+            Grid.Row="1"
+            Grid.Column="3"
+            Minimum="0"
+            Maximum="100"
+            Pitch="5"
+            LabelInterval="4" />
     </Grid>
 </Window>
