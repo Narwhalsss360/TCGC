@@ -41,8 +41,8 @@
         <analog:AnalogGauge
             x:Name="_oilTemperatureGauge"
             Grid.Row="1"
-            Minimum="100"
-            Maximum="240"
+            Minimum="50"
+            Maximum="180"
             Value="0"
             Pitch="5"
             LabelInterval="4" />

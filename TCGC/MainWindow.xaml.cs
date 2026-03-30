@@ -1,19 +1,27 @@
-﻿using System.Windows;
+﻿using System.Runtime.CompilerServices;
+using System.Windows;
 using TruckConnect;
+using WPFGauges.Analog;
 
 namespace TCGC;
+
+public delegate double UnitConverter(double value);
 
 /// <summary>
 /// Interaction logic for MainWindow.xaml
 /// </summary>
 public partial class MainWindow : Window
 {
-    TimeSpan _refreshDelay = TimeSpan.FromMilliseconds(1000 / 24);
+    public static readonly UnitConverter _metersPerSecondToKilometersPerHour = (double value) => 3.6 * value;
+    public static readonly UnitConverter _metersPerSecondToMilesPerHour = (double value) => 2.237 * value;
+
     System.Timers.Timer _refreshTimer = new(1000 / 24) { AutoReset = false };
     CancellationTokenSource _cts = new();
     GaugeClusterData _data = new();
     Connection _connection = new();
     DateTime _lastRefresh = DateTime.Now;
+
+    UnitConverter SpeedConverter = true ? _metersPerSecondToMilesPerHour : _metersPerSecondToKilometersPerHour;
 
     public MainWindow()
     {
@@ -77,7 +85,7 @@ public partial class MainWindow : Window
         _oilTemperatureGauge.Value = Math.Max(100, data.OilTemperature.ValueOrDefault(0));
         _rpmGauge.Value = data.Rpm.ValueOrDefault(0);
         _odometerTextBlock.Text = $"{data.Odometer.ValueOrDefault(0):F0}";
-        _speedGauge.Value = 3.6 * data.Speed.ValueOrDefault(0);
+        _speedGauge.Value = Math.Abs(SpeedConverter(data.Speed.ValueOrDefault(0)));
         _voltageGauge.Value = data.BatteryVoltage.ValueOrDefault(0);
         _oilPressureGauge.Value = data.OilPressure.ValueOrDefault(0);
     }
